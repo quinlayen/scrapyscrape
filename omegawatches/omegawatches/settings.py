@@ -8,7 +8,8 @@
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
 SELENIUM_DRIVER_NAME = 'chrome'
-SELENIUM_DRIVER_ARGUMENTS=['--headless']  
+# SELENIUM_DRIVER_ARGUMENTS=['--headless']  
+SELENIUM_DRIVER_ARGUMENTS=[] 
   
 DOWNLOADER_MIDDLEWARES = {
      'scrapy_selenium.SeleniumMiddleware': 800,
