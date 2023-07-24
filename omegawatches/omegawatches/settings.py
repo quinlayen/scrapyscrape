@@ -10,6 +10,10 @@
 # SELENIUM_DRIVER_NAME = 'chrome'
 # # SELENIUM_DRIVER_ARGUMENTS=['--headless']  
 # SELENIUM_DRIVER_ARGUMENTS=['--detach'] 
+
+ITEM_PIPELINES = {"scrapy.pipelines.images.ImagesPipeline": 1}
+IMAGES_STORE = "."
+
   
 DOWNLOADER_MIDDLEWARES = {
      # 'scrapy_selenium.SeleniumMiddleware': 800,

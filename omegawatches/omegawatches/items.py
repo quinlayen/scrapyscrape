@@ -8,7 +8,8 @@ import scrapy
 
 class WatchItem(scrapy.Item):
     watch_url = scrapy.Field()
-    img_url = scrapy.Field()
+    image_urls = scrapy.Field()
+    images = scrapy.Field()
     watch_price = scrapy.Field()
     # url = scrapy.Field()
     # url = scrapy.Field()

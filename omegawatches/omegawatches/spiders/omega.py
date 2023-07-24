@@ -43,7 +43,7 @@ class OmegaSpider(scrapy.Spider):
         watches = response.xpath('//li[@class="product-item"]')
         for watch in watches:
             watch_item['watch_url'] = watch.xpath('.//a[@class="ow-prod__img"]/@href').get(),
-            # watch_item['img_url'] = self.parse_img_urls(watch.xpath('.//a[@class="ow-prod__img"]/picture//@data-srcset').get()),
+            watch_item['image_urls'] = self.parse_img_urls(watch.xpath('.//a[@class="ow-prod__img"]/picture/source/@data-srcset').get()),
             watch_item['watch_price'] = watch.xpath('.//span[@class="price"]/text()').get()     
             yield watch_item
         
@@ -54,6 +54,7 @@ class OmegaSpider(scrapy.Spider):
         # previous_url = response.url
         # loader_element = driver.find_element(By.XPATH, '//a[@class="action next"]')
         # # element = driver.find_element(By.CSS_SELECTOR,'div.product-list-pager')
+    
         # element_selector = "#product-list-toolbar-top > div > div > a"
         # # Check if the element is visible on the page using JavaScript
         # def is_element_present(selector):
