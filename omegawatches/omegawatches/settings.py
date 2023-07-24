@@ -7,14 +7,14 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-SELENIUM_DRIVER_NAME = 'chrome'
-# SELENIUM_DRIVER_ARGUMENTS=['--headless']  
-SELENIUM_DRIVER_ARGUMENTS=[] 
+# SELENIUM_DRIVER_NAME = 'chrome'
+# # SELENIUM_DRIVER_ARGUMENTS=['--headless']  
+# SELENIUM_DRIVER_ARGUMENTS=['--detach'] 
   
 DOWNLOADER_MIDDLEWARES = {
-     'scrapy_selenium.SeleniumMiddleware': 800,
-    #  'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
-    #  'scrapy_user_agents.middlewares.RandomUserAgentMiddleware': 400,
+     # 'scrapy_selenium.SeleniumMiddleware': 800,
+     'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
+     'scrapy_user_agents.middlewares.RandomUserAgentMiddleware': 400,
 }
 
 BOT_NAME = "omegawatches"
@@ -24,10 +24,10 @@ NEWSPIDER_MODULE = "omegawatches.spiders"
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = "omegawatches (+http://www.yourdomain.com)"
+USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32

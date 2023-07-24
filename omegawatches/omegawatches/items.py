@@ -6,7 +6,14 @@
 import scrapy
 
 
-class OmegawatchesItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+class WatchItem(scrapy.Item):
+    watch_url = scrapy.Field()
+    img_url = scrapy.Field()
+    watch_price = scrapy.Field()
+    # url = scrapy.Field()
+    # url = scrapy.Field()
+    # url = scrapy.Field()
+    # url = scrapy.Field()
+    # url = scrapy.Field()
+    # url = scrapy.Field()
+
