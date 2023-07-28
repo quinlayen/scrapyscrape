@@ -1,0 +1,6 @@
+{
+    "dbt.queryLimit": 500,
+    "cSpell.words": [
+        "linkextractors"
+    ]
+}

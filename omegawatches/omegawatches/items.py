@@ -24,6 +24,6 @@ class WatchItem(scrapy.Item):
     crystal = scrapy.Field()
     clasp_material = scrapy.Field()
     clasp_type = scrapy.Field()
-    image_urls = scrapy.Field()
-    images = scrapy.Field()
+    # image_urls = scrapy.Field()
+    # images = scrapy.Field()
 
