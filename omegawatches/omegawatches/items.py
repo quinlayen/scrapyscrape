@@ -22,8 +22,11 @@ class WatchItem(scrapy.Item):
     weight = scrapy.Field()
     water_resistance = scrapy.Field()
     crystal = scrapy.Field()
-    clasp_material = scrapy.Field()
+    bracelet_material = scrapy.Field()
     clasp_type = scrapy.Field()
+    dial_color = scrapy.Field()
+    power_reserve = scrapy.Field()
+    caliber = scrapy.Field()
     # image_urls = scrapy.Field()
     # images = scrapy.Field()
 

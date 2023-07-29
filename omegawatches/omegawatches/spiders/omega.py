@@ -12,8 +12,10 @@
 # from selenium.webdriver.support.ui import WebDriverWait
 from ..items import WatchItem
 import scrapy
+import re
 import os
 import json
+from w3lib.html import remove_tags
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 from dotenv import load_dotenv
@@ -24,16 +26,34 @@ api_key = os.getenv('SCRAPFLY_API_KEY')
 class OmegaSpider(CrawlSpider):
     name = "omega"
     allowed_domains = ["omegawatches.com"]
-    start_urls = ["https://www.omegawatches.com/"]
-
+    start_urls = ["https://www.omegawatches.com/en-us/watchfinder"]
+    
+    custom_settings = {
+        'FEED_EXPORT_ENCODING': 'utf-8'
+    }
+# Rule(LinkExtractor(allow='en-us', deny='watchfinder'), callback="parse_item")
     rules = (
-        Rule(LinkExtractor(allow='watchfinder')),
-        Rule(LinkExtractor(allow='en-us', deny='watchfinder'), callback="parse_item")
+        Rule(LinkExtractor(restrict_xpaths=('//ol[@class="products list items product-items"]//a')), callback="parse_item"),
     )
+    
+    def clean_caliber(self, caliber):
+        return caliber[-4:]
+    
+    def clean_power_reserve(self, power):
+        split_list = power.split(' ')
+        return split_list[0]
+    
+    def extract_crystal(self,input_string):
+        pattern = r'\bsapphire\b'
+        
+        match = re.search(pattern, input_string)
+        if match:
+            return match.group(0)
+        else:
+            return None
 
     def parse_item(self, response):
         item = WatchItem()
-        features_xpath = '//div[@class="product-info-data-content features watches"]'
         item['watch_url'] = response.url
         item['parent_model'] =response.xpath('//span[@class="product attribute collection hidden"]/text()').get(),
         item['specific_model'] = response.xpath('//span[@class="product attribute subcollection"]/text()').get(),
@@ -48,18 +68,27 @@ class OmegaSpider(CrawlSpider):
         item['lug_to_lug'] = response.xpath('//span[@data-code="watch_lug_to_lug"]/text()').get(),
         item['weight'] = response.xpath('//span[@data-code="weight"]/text()').get(),
         item['water_resistance'] = response.xpath('//span[@data-code="watch_waterresistance"]/text()').get(),
-        item['crystal'] = response.xpath('//span[@data-code="watch_crystal"]/text()').get(),
+        # item['crystal'] = self.extract_crystal(response.xpath('//span[@data-code="watch_crystal"]/text()').get()),
         item['bracelet_material'] = response.xpath('//span[@data-code="watch_bracelet"]/text()').get(),
         item['clasp_type'] = response.xpath('//span[@data-code="strap_clasp_type"]/text()').get(),
         item['dial_color'] = response.xpath('//span[@data-code="watch_dial" ]/text()').get(),
-        item['power_reserve'] = response.xpath('//li[@class="ow-mod_37__picto ow-mod_37__picto--power-reserve"]/span/text()').get(),
-        item['caliber'] = response.xpath('//div[@class="ow-mod__col-content"]/h2/span[@class="pm-title"]/span[2]/text()').get(),
-        
+        item['power_reserve'] = self.clean_power_reserve(response.xpath('normalize-space(//li[@class="ow-mod_37__picto ow-mod_37__picto--power-reserve"]/span/text())').get()),
+        # item['caliber'] = self.clean_caliber(response.xpath('//div[@class="ow-mod__col-content"]/h2/span[@class="pm-title"]/span[2]/text()').get()),
         yield item
         
         #TODO remove details of crystal to only include the rock, i.e saphire
         #TODO remove worlds power reserve of power reserve to only include the number value
         #TODO clean up unicode in caliber
+        
+        # battery powered watches do not have power reserve
+        # Deville notes
+        
+        
+        
+        
+        
+        
+        
         
 # class OmegaSpider(scrapy.Spider):
 #     name = "omega"
