@@ -12,7 +12,7 @@
 # from selenium.webdriver.support.ui import WebDriverWait
 from ..items import WatchItem
 import scrapy
-import re
+from scrapy.loader import ItemLoader
 import os
 import json
 from w3lib.html import remove_tags
@@ -36,45 +36,55 @@ class OmegaSpider(CrawlSpider):
         Rule(LinkExtractor(restrict_xpaths=('//ol[@class="products list items product-items"]//a')), callback="parse_item"),
     )
     
-    def clean_caliber(self, caliber):
-        return caliber[-4:]
+   
     
-    def clean_power_reserve(self, power):
-        split_list = power.split(' ')
-        return split_list[0]
-    
-    def extract_crystal(self,input_string):
-        pattern = r'\bsapphire\b'
-        
-        match = re.search(pattern, input_string)
-        if match:
-            return match.group(0)
-        else:
-            return None
+   
 
     def parse_item(self, response):
-        item = WatchItem()
-        item['watch_url'] = response.url
-        item['parent_model'] =response.xpath('//span[@class="product attribute collection hidden"]/text()').get(),
-        item['specific_model'] = response.xpath('//span[@class="product attribute subcollection"]/text()').get(),
-        item['nickname'] = response.xpath('//span[@class="product attribute name"]/text()').get(),
-        item['sku'] = response.xpath('//p[@class="product attribute sku"]/span/text()').get(),
-        item['description'] = response.xpath('//*[@id="product-info-description"]/div/div/p/text()').getall(),
-        item['price'] = response.xpath('//span[@class="price"]/text()').get(),
-        item['case_material'] = response.xpath('//span[@data-code="watch_watchcase"]/text()').get(),
-        item['case_diameter'] = response.xpath('//span[@data-code="watch_casediameter"]/text()').get(),
-        item['between_lugs'] = response.xpath('//span[@data-code="watch_between_lugs_size"]/text()').get(),
-        item['case_thickness'] = response.xpath('//span[@data-code="watch_thickness"]/text()').get(),
-        item['lug_to_lug'] = response.xpath('//span[@data-code="watch_lug_to_lug"]/text()').get(),
-        item['weight'] = response.xpath('//span[@data-code="weight"]/text()').get(),
-        item['water_resistance'] = response.xpath('//span[@data-code="watch_waterresistance"]/text()').get(),
+        loader = ItemLoader(item=WatchItem(), response=response)
+        loader.add_value('watch_url', response.url)
+        loader.add_xpath('parent_model','//span[@class="product attribute collection hidden"]/text()')
+        loader.add_xpath('specific_model','//span[@class="product attribute subcollection"]/text()')
+        loader.add_xpath('nickname','//span[@class="product attribute name"]/text()')
+        loader.add_xpath('sku','//p[@class="product attribute sku"]/span/text()')
+        loader.add_xpath('description','//*[@id="product-info-description"]/div/div/p/text()')
+        loader.add_xpath('price','//span[@class="price"]/text()')
+        loader.add_xpath('case_material','//span[@data-code="watch_watchcase"]/text()')
+        loader.add_xpath('case_diameter','//span[@data-code="watch_casediameter"]/text()')
+        loader.add_xpath('between_lugs','//span[@data-code="watch_between_lugs_size"]/text()')
+        loader.add_xpath('case_thickness','//span[@data-code="watch_thickness"]/text()')
+        loader.add_xpath('lug_to_lug','//span[@data-code="watch_lug_to_lug"]/text()')
+        loader.add_xpath('weight','//span[@data-code="weight"]/text()')
+        loader.add_xpath('water_resistance','//span[@data-code="watch_waterresistance"]/text()')
+        loader.add_xpath('crystal','//span[@data-code="watch_crystal"]/text()')
+        loader.add_xpath('bracelet_material','//span[@data-code="watch_bracelet"]/text()')
+        loader.add_xpath('clasp_type','//span[@data-code="strap_clasp_type"]/text()')
+        loader.add_xpath('power_reserve','normalize-space(//li[@class="ow-mod_37__picto ow-mod_37__picto--power-reserve"]/span/text())')
+        loader.add_xpath('caliber','//div[@class="ow-mod__col-content"]/h2/span[@class="pm-title"]/span[2]/text()')
+        loader.add_xpath('dial_color','//span[@data-code="watch_dial" ]/text()')
+        yield loader.load_item()
+        # loader.add_xpath('image_urls')
+        # item['watch_url'] = response.url
+        # item['parent_model'] =response.xpath('//span[@class="product attribute collection hidden"]/text()').get(),
+        # item['specific_model'] = response.xpath('//span[@class="product attribute subcollection"]/text()').get(),
+        # item['nickname'] = response.xpath('//span[@class="product attribute name"]/text()').get(),
+        # item['sku'] = response.xpath('//p[@class="product attribute sku"]/span/text()').get(),
+        # item['description'] = response.xpath('//*[@id="product-info-description"]/div/div/p/text()').getall(),
+        # item['price'] = response.xpath('//span[@class="price"]/text()').get(),
+        # item['case_material'] = response.xpath('//span[@data-code="watch_watchcase"]/text()').get(),
+        # item['case_diameter'] = response.xpath('//span[@data-code="watch_casediameter"]/text()').get(),
+        # item['between_lugs'] = response.xpath('//span[@data-code="watch_between_lugs_size"]/text()').get(),
+        # item['case_thickness'] = response.xpath('//span[@data-code="watch_thickness"]/text()').get(),
+        # item['lug_to_lug'] = response.xpath('//span[@data-code="watch_lug_to_lug"]/text()').get(),
+        # item['weight'] = response.xpath('//span[@data-code="weight"]/text()').get(),
+        # item['water_resistance'] = response.xpath('//span[@data-code="watch_waterresistance"]/text()').get(),
         # item['crystal'] = self.extract_crystal(response.xpath('//span[@data-code="watch_crystal"]/text()').get()),
-        item['bracelet_material'] = response.xpath('//span[@data-code="watch_bracelet"]/text()').get(),
-        item['clasp_type'] = response.xpath('//span[@data-code="strap_clasp_type"]/text()').get(),
-        item['dial_color'] = response.xpath('//span[@data-code="watch_dial" ]/text()').get(),
-        item['power_reserve'] = self.clean_power_reserve(response.xpath('normalize-space(//li[@class="ow-mod_37__picto ow-mod_37__picto--power-reserve"]/span/text())').get()),
+        # item['bracelet_material'] = response.xpath('//span[@data-code="watch_bracelet"]/text()').get(),
+        # item['clasp_type'] = response.xpath('//span[@data-code="strap_clasp_type"]/text()').get(),
+        # item['dial_color'] = response.xpath('//span[@data-code="watch_dial" ]/text()').get(),
+        # item['power_reserve'] = self.clean_power_reserve(response.xpath('normalize-space(//li[@class="ow-mod_37__picto ow-mod_37__picto--power-reserve"]/span/text())').get()),
         # item['caliber'] = self.clean_caliber(response.xpath('//div[@class="ow-mod__col-content"]/h2/span[@class="pm-title"]/span[2]/text()').get()),
-        yield item
+        # yield item
         
         #TODO remove details of crystal to only include the rock, i.e saphire
         #TODO remove worlds power reserve of power reserve to only include the number value
