@@ -4,8 +4,9 @@
 # https://docs.scrapy.org/en/latest/topics/items.html
 
 import scrapy
-from scrapy.loader.processors import TakeFirst, MapCompose
+from scrapy.loader.processors import TakeFirst, MapCompose, Join, Identity
 import re
+
 
 def extract_crystal(input_string):
     pattern = r'\bsapphire\b'
@@ -23,11 +24,17 @@ def clean_power_reserve(power):
     split_list = power.split(' ')
     return split_list[0]
 
+# def get_all_features(xpath):
+#     for feature in xpath
 # 
 def parse_img_urls(images):
     image_list = images.split(" ")
     return image_list[-2]
 
+def clean_features(feature_list):
+    return [feature.strip() for feature in feature_list.split(',')]
+    
+   
 class WatchItem(scrapy.Item):
     watch_url = scrapy.Field(
         output_processor = TakeFirst()
@@ -45,7 +52,7 @@ class WatchItem(scrapy.Item):
         output_processor = TakeFirst()
     )
     description = scrapy.Field(
-        output_processor = TakeFirst()
+        output_processor = Join('')
     )
     price = scrapy.Field(
         output_processor = TakeFirst()
@@ -88,9 +95,16 @@ class WatchItem(scrapy.Item):
         input_processor = MapCompose(clean_power_reserve),
         output_processor = TakeFirst()
     )
+    battery_life = scrapy.Field(
+        output_processor = TakeFirst()
+    )
     caliber = scrapy.Field(
         input_processor = MapCompose(clean_caliber),
         output_processor = TakeFirst()
+    )
+    features = scrapy.Field(
+        input_processor = MapCompose(clean_features),
+        output_processor = Join(' , ')
     )
     # image_urls = scrapy.Field()
     # images = scrapy.Field()
