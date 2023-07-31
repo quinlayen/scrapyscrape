@@ -25,25 +25,12 @@ class OmegaSpider(CrawlSpider):
     )
     
     def parse_item(self, response):
-        
-        # power_field_name = " "
-        # power_xpath = " "
-        # caliber_xpath = " "
-        #     # Trying to parse out quartz watches
-        # if r'\bquartz\b' in response.url:
-        #     power_field_name = 'battery_life'
-        #     power_xpath = '//div[@class="product-info-data-content movement watches"]//li[3]/span/text()'
-        #     caliber_xpath = '//div[@class="product-info-data-content movement watches"]//li[1]/span/text()'
-        # else:
-        #     power_field_name = 'power_reserve' 
-        #     power_xpath = 'normalize-space(//li[@class="ow-mod_37__picto ow-mod_37__picto--power-reserve"]/span/text())'
-        #     caliber_xpath = '//div[@class="ow-mod__col-content"]/h2/span[@class="pm-title"]/span[2]/text()'
-        
-            
+
+      
         loader = ItemLoader(item=WatchItem(), response=response)
-        
-        features = response.xpath('//div[@class="pm-feature-tooltip"]/p/span/text()').getall()
-        # print(features)
+  
+        features_list = response.xpath('//div[@class="pm-feature-tooltip"]/p/span/text()').getall()
+
         
         loader.add_value('watch_url', response.url)
         loader.add_xpath('parent_model','//span[@class="product attribute collection hidden"]/text()')
@@ -62,14 +49,30 @@ class OmegaSpider(CrawlSpider):
         loader.add_xpath('crystal','//span[@data-code="watch_crystal"]/text()')
         loader.add_xpath('bracelet_material','//span[@data-code="watch_bracelet"]/text()')
         loader.add_xpath('clasp_type','//span[@data-code="strap_clasp_type"]/text()')
-        loader.add_value('features', features)
+        loader.add_value('features', features_list)
         loader.add_xpath('power_reserve','normalize-space(//li[@class="ow-mod_37__picto ow-mod_37__picto--power-reserve"]/span/text())')
-        loader.add_xpath('caliber','//div[@class="ow-mod__col-content"]/h2/span[@class="pm-title"]/span[2]/text()')
-        loader.add_xpath('dial_color','//span[@data-code="watch_dial" ]/text()')
+        # loader.add_xpath('caliber','//div[@class="ow-mod__col-content"]/h2/span[@class="pm-title"]/span[2]/text()')
+        # loader.add_xpath('dial_color','//span[@data-code="watch_dial" ]/text()')
         yield loader.load_item()
 
       
  
+ 
+         
+        # power_field_name = " "
+        # power_xpath = " "
+        # caliber_xpath = " "
+        #     # Trying to parse out quartz watches
+        # if r'\bquartz\b' in response.url:
+        #     power_field_name = 'battery_life'
+        #     power_xpath = '//div[@class="product-info-data-content movement watches"]//li[3]/span/text()'
+        #     caliber_xpath = '//div[@class="product-info-data-content movement watches"]//li[1]/span/text()'
+        # else:
+        #     power_field_name = 'power_reserve' 
+        #     power_xpath = 'normalize-space(//li[@class="ow-mod_37__picto ow-mod_37__picto--power-reserve"]/span/text())'
+        #     caliber_xpath = '//div[@class="ow-mod__col-content"]/h2/span[@class="pm-title"]/span[2]/text()'
+        
+           
         
         
 # class OmegaSpider(scrapy.Spider):

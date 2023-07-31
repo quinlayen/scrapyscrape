@@ -22,7 +22,7 @@ def clean_caliber(caliber):
     
 def clean_power_reserve(power):
     split_list = power.split(' ')
-    return split_list[0]
+    return power.split(' ')[0:2]
 
 # def get_all_features(xpath):
 #     for feature in xpath
@@ -36,6 +36,7 @@ def clean_features(feature_list):
     
    
 class WatchItem(scrapy.Item):
+    
     watch_url = scrapy.Field(
         output_processor = TakeFirst()
     )
@@ -93,7 +94,7 @@ class WatchItem(scrapy.Item):
     )
     power_reserve = scrapy.Field(
         input_processor = MapCompose(clean_power_reserve),
-        output_processor = TakeFirst()
+        output_processor = Join(' ')
     )
     battery_life = scrapy.Field(
         output_processor = TakeFirst()
