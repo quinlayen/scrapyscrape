@@ -24,9 +24,6 @@ def clean_power_reserve(power):
     split_list = power.split(' ')
     return power.split(' ')[0:2]
 
-# def get_all_features(xpath):
-#     for feature in xpath
-# 
 def parse_img_urls(images):
     image_list = images.split(" ")
     return image_list[-2]
