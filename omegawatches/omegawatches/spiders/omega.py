@@ -2,6 +2,7 @@
 # from scrapfly import ScrapeConfig
 # from scrapfly.scrapy import ScrapflyMiddleware, ScrapflyScrapyRequest, ScrapflySpider, ScrapflyScrapyResponse
 from ..items import WatchItem
+from ..itemloaders import OmegaItemLoader
 import scrapy
 from scrapy.loader import ItemLoader
 import os
@@ -40,8 +41,8 @@ class OmegaSpider(CrawlSpider):
             power_xpath = 'normalize-space(//li[@class="ow-mod_37__picto ow-mod_37__picto--power-reserve"]/span/text())'
             caliber_xpath = '//div[@class="ow-mod__col-content"]/h2/span[@class="pm-title"]/span[2]/text()'
             
-        loader = ItemLoader(item=WatchItem(), response=response)
-        
+        # loader = ItemLoader(item=WatchItem(), response=response)
+        loader = OmegaItemLoader(item=WatchItem(), response=response)
         loader.add_value('watch_url', response.url)
         loader.add_xpath('parent_model','//span[@class="product attribute collection hidden"]/text()')
         loader.add_xpath('specific_model','//span[@class="product attribute subcollection"]/text()')
@@ -60,17 +61,15 @@ class OmegaSpider(CrawlSpider):
         loader.add_xpath('bracelet_material','//span[@data-code="watch_bracelet"]/text()')
         loader.add_xpath('clasp_type','//span[@data-code="strap_clasp_type"]/text()')
         loader.add_value('features', features_list)
-        # loader.add_xpath('power_reserve','normalize-space(//li[@class="ow-mod_37__picto ow-mod_37__picto--power-reserve"]/span/text())')
-        # loader.add_xpath('caliber','//div[@class="ow-mod__col-content"]/h2/span[@class="pm-title"]/span[2]/text()')
         loader.add_xpath(f'{power_field_name}', f'{power_xpath}')
         loader.add_xpath('caliber', f'{caliber_xpath}')
         loader.add_xpath('dial_color','//span[@data-code="watch_dial" ]/text()')
+        # loader.add_xpath('image_urls','//*[@id="gallery-frame-0"]/img[2]/@src')
         yield loader.load_item()
 
       
  
- 
-         
+
 
         
            
