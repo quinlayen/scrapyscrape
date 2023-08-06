@@ -13,11 +13,10 @@
 
 # ITEM_PIPELINES = {"scrapy.pipelines.images.ImagesPipeline": 1,
 #                   "scrapy.pipelines.CombineDataPipeline": 300}
-IMAGES_STORE = "."
+# IMAGES_STORE = "."
 
   
 DOWNLOADER_MIDDLEWARES = {
-     # 'scrapy_selenium.SeleniumMiddleware': 800,
      'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
      'scrapy_user_agents.middlewares.RandomUserAgentMiddleware': 400,
 }
